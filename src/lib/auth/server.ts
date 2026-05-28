@@ -1,5 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { nextCookies } from 'better-auth/next-js';
 import { db } from '@/db/client';
 import * as schema from '@/db/schema';
 
@@ -31,6 +32,7 @@ export const auth = betterAuth({
       session_token: { attributes: { sameSite: 'lax' } },
     },
   },
+  plugins: [nextCookies()],
 });
 
 export type Auth = typeof auth;
