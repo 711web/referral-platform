@@ -3,13 +3,14 @@ import { db } from '@/db/client';
 import {
   clicks,
   links,
+  campaigns,
   conversions,
   commissions,
   type Conversion,
   type Commission,
 } from '@/db/schema';
 
-// Default commission rate when no campaign-level rate is set (Slice 4 will override).
+// Default commission rate when no campaign-level rate is set.
 const DEFAULT_COMMISSION_BPS = 1000; // 10.00% expressed in basis points
 
 export type RecordConversionInput = {
@@ -44,16 +45,30 @@ export async function recordConversion(
 
   let linkId: string | null = null;
   let creatorWorkspaceId: string | null = null;
+  let resolvedCommissionBps = commissionBps;
 
   if (click) {
     linkId = click.linkId;
     const [link] = await db
-      .select({ id: links.id, workspaceId: links.workspaceId })
+      .select({
+        id: links.id,
+        workspaceId: links.workspaceId,
+        campaignId: links.campaignId,
+      })
       .from(links)
       .where(eq(links.id, click.linkId))
       .limit(1);
     if (link) {
       creatorWorkspaceId = link.workspaceId;
+      // If link is part of a campaign, use the campaign's commission rate
+      if (link.campaignId && input.commissionBps === undefined) {
+        const [camp] = await db
+          .select({ commissionBps: campaigns.commissionBps })
+          .from(campaigns)
+          .where(eq(campaigns.id, link.campaignId))
+          .limit(1);
+        if (camp) resolvedCommissionBps = camp.commissionBps;
+      }
     }
   }
 
@@ -101,7 +116,7 @@ export async function recordConversion(
 
   let commission: Commission | null = null;
   if (creatorWorkspaceId && input.amountCents > 0) {
-    const commissionCents = Math.floor((input.amountCents * commissionBps) / 10000);
+    const commissionCents = Math.floor((input.amountCents * resolvedCommissionBps) / 10000);
     const [com] = await db
       .insert(commissions)
       .values({

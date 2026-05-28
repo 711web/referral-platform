@@ -29,6 +29,13 @@
       "when": 1779979802904,
       "tag": "0003_fresh_luckman",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1779980216482,
+      "tag": "0004_foamy_elektra",
+      "breakpoints": true
     }
   ]
 }

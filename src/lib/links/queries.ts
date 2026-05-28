@@ -11,6 +11,7 @@ export async function listLinksForWorkspace(workspaceId: string): Promise<LinkWi
       slug: links.slug,
       destinationUrl: links.destinationUrl,
       workspaceId: links.workspaceId,
+      campaignId: links.campaignId,
       createdAt: links.createdAt,
       clickCount: sql<number>`coalesce(count(${clicks.id}), 0)::int`,
     })
