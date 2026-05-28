@@ -14,7 +14,8 @@ type Stats = {
 const CAPABILITIES: Array<{
   title: string;
   body: string;
-  status: 'shipped' | 'soon';
+  badge: 'live' | 'needs-key';
+  badgeNote?: string;
   color: 'cream' | 'pink' | 'orange' | 'berry' | 'pink-soft';
   rotate: number;
   span?: 'wide' | 'tall';
@@ -22,50 +23,52 @@ const CAPABILITIES: Array<{
   {
     title: 'Short links',
     body: '/go/<slug> with a 30-day cookie. Sub-80ms redirect in-region.',
-    status: 'shipped',
+    badge: 'live',
     color: 'cream',
     rotate: -1.5,
   },
   {
     title: 'Click tracking',
     body: 'Async batch logger into Postgres. Geo, device, referrer.',
-    status: 'shipped',
+    badge: 'live',
     color: 'pink',
     rotate: 1.2,
   },
   {
     title: 'Workspace dashboards',
-    body: 'Sign up, get a workspace, manage every link in one place.',
-    status: 'shipped',
+    body: 'Sign up, get a workspace, manage every link, campaign, conversion.',
+    badge: 'live',
     color: 'orange',
     rotate: -0.8,
   },
   {
     title: 'Webhook + pixel attribution',
-    body: 'Drop-in JS pixel OR HMAC-signed server webhook. Last-click, 30 days.',
-    status: 'soon',
+    body: 'Drop-in JS pixel OR HMAC-signed server webhook. Last-click, 30 days. Idempotent on your order_id.',
+    badge: 'live',
     color: 'pink-soft',
     rotate: 0.5,
     span: 'wide',
   },
   {
-    title: 'Campaigns',
-    body: 'Brands post offers; creators join. Per-creator tracking links minted.',
-    status: 'soon',
+    title: 'Campaigns + marketplace',
+    body: 'Brands post offers, creators join, per-creator tracking links auto-minted. Commission rate per campaign.',
+    badge: 'live',
     color: 'cream',
     rotate: -1,
   },
   {
-    title: 'AI captions',
-    body: 'IG / TikTok / X. Priced in credit packs.',
-    status: 'soon',
+    title: 'AI captions + briefs',
+    body: 'IG / TikTok / X copy, campaign briefs, pitch DMs. Priced in credit packs.',
+    badge: 'needs-key',
+    badgeNote: 'OPENROUTER_API_KEY',
     color: 'berry',
     rotate: 1.6,
   },
   {
-    title: 'Stripe Connect payouts',
-    body: 'Daily settlement. Anti-fraud guardrails. Multi-currency.',
-    status: 'soon',
+    title: 'Stripe credit packs + payouts',
+    body: 'Buy credits via Stripe Checkout. Payout CSV export today; Stripe Connect transfers wired (turn on with key).',
+    badge: 'needs-key',
+    badgeNote: 'STRIPE_SECRET_KEY',
     color: 'orange',
     rotate: -1.3,
   },
@@ -156,10 +159,10 @@ export function Landing({ stats, today }: { stats: Stats; today: string }) {
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-3 px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.18em] text-[var(--berry)]">
           <span className="flex items-center gap-2">
             <span aria-hidden="true" className="block size-3 rotate-12 bg-[var(--orange)]" />
-            Partner — Open ledger
+            Partner — Open referral stack
           </span>
           <span className="hidden text-[var(--berry-2)] sm:inline">
-            {today} · London · v0.2 · half-built
+            {today} · London · v1.0 · all shipped
           </span>
         </div>
       </div>
@@ -178,18 +181,18 @@ export function Landing({ stats, today }: { stats: Stats; today: string }) {
             custom={-0.6}
             className="sticker sticker-cream relative col-span-12 p-8 md:col-span-8 md:p-12"
           >
-            <span className="stamp">SHIPPED THIS WEEK</span>
+            <span className="stamp">v1.0 · all six slices live</span>
             <h1 className="mt-6 text-[clamp(48px,7vw,96px)] font-bold leading-[1.02] tracking-tight text-[var(--berry)]">
-              A half-built
+              The open
               <br />
               <span className="font-display text-[1.18em] font-bold leading-[0.86] text-[var(--orange)]">
-                referral platform.
+                referral stack.
               </span>
             </h1>
             <p className="mt-6 max-w-[44ch] text-[18px] leading-[1.55] text-[var(--berry)]">
-              Short-link tracking and dashboards work right now. Campaigns,
-              payouts and AI captions land in the next four weeks. Free until
-              they all ship.
+              Short links, click attribution, campaigns, AI captions, Stripe
+              payouts. Every part of the stack runs at partner.711web.com
+              today. Open source. Free during early access.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
@@ -308,13 +311,17 @@ export function Landing({ stats, today }: { stats: Stats; today: string }) {
               <span key={i} className="flex items-center gap-8">
                 <span>Sign up free</span>
                 <span className="text-[var(--orange-2)]">✦</span>
-                <span>Track every click</span>
+                <span>Workspace-scoped links</span>
                 <span className="text-[var(--orange-2)]">✦</span>
-                <span>Workspaces for teams</span>
+                <span>HMAC webhook + pixel</span>
                 <span className="text-[var(--orange-2)]">✦</span>
-                <span>Stripe payouts soon</span>
+                <span>Brand + creator marketplace</span>
                 <span className="text-[var(--orange-2)]">✦</span>
-                <span>AI captions soon</span>
+                <span>AI brief + caption + pitch</span>
+                <span className="text-[var(--orange-2)]">✦</span>
+                <span>Stripe credit packs</span>
+                <span className="text-[var(--orange-2)]">✦</span>
+                <span>Payout CSV export</span>
                 <span className="text-[var(--orange-2)]">✦</span>
                 <span>Self-hosted single box</span>
                 <span className="text-[var(--orange-2)]">✦</span>
@@ -331,13 +338,13 @@ export function Landing({ stats, today }: { stats: Stats; today: string }) {
             <div>
               <span className="stamp">The ledger</span>
               <h2 className="mt-4 text-[clamp(36px,5vw,72px)] font-bold leading-[1.02] tracking-tight text-[var(--berry)]">
-                What's <span className="font-display text-[1.18em] font-bold text-[var(--pink)]">shipped</span> /{' '}
-                <span className="font-display text-[1.18em] font-bold text-[var(--orange)]">soon</span>.
+                Seven things,
+                <br /> <span className="font-display text-[1.18em] font-bold text-[var(--pink)]">all shipped.</span>
               </h2>
             </div>
             <p className="max-w-[36ch] text-[15px] leading-[1.55] text-[var(--berry-2)]">
-              No fake roadmap badges, no "Q2 2026 promises". If it's here as
-              SHIPPED you can sign up and use it today.
+              Five run out of the box. Two need an API key you already pay
+              for (OpenRouter, Stripe). All code is live in the repo.
             </p>
           </div>
         </Reveal>
@@ -367,17 +374,11 @@ export function Landing({ stats, today }: { stats: Stats; today: string }) {
               }}
             >
               <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.18em]">
-                <span className={c.status === 'shipped' ? 'text-[var(--orange)]' : 'opacity-60'}>
+                <span className="text-[var(--orange)]">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <span
-                  className={`rounded-md border px-2 py-0.5 text-[10px] ${
-                    c.status === 'shipped'
-                      ? 'border-current'
-                      : 'border-current opacity-70'
-                  }`}
-                >
-                  {c.status === 'shipped' ? '✓ live' : '◌ soon'}
+                <span className="rounded-md border border-current px-2 py-0.5 text-[10px]">
+                  {c.badge === 'live' ? '✓ live' : '⚙ connect'}
                 </span>
               </div>
               <h3 className="mt-5 text-[24px] font-bold leading-[1.1]">
@@ -386,6 +387,11 @@ export function Landing({ stats, today }: { stats: Stats; today: string }) {
               <p className="mt-3 text-[14.5px] leading-[1.55] opacity-85">
                 {c.body}
               </p>
+              {c.badgeNote && (
+                <p className="mt-3 font-mono text-[11px] opacity-70">
+                  needs <span className="font-bold">{c.badgeNote}</span> in .env
+                </p>
+              )}
             </motion.li>
           ))}
         </motion.ul>
@@ -409,7 +415,7 @@ export function Landing({ stats, today }: { stats: Stats; today: string }) {
               ['01', 'Paste a URL', 'Get a short slug under your workspace. BYO domain whenever.'],
               ['02', 'Someone clicks', 'Edge hits Redis. Cookie set. 302 in <80ms. UTM appended.'],
               ['03', 'Conversion fires', 'Webhook OR pixel. We attribute last-click and accrue commission.'],
-              ['04', 'Settlement runs', 'CSV today. Daily Stripe Connect payouts in Slice 6.'],
+              ['04', 'Settlement runs', 'Download payouts as CSV. Or wire Stripe Connect via your STRIPE_SECRET_KEY for daily transfers.'],
             ].map(([n, title, body], i) => (
               <Reveal key={i} delay={i * 0.06}>
                 <div className="flex h-full flex-col gap-3 border-t-4 border-[var(--berry)] pt-5">
@@ -459,12 +465,12 @@ export function Landing({ stats, today }: { stats: Stats; today: string }) {
                 'Postgres on one UK Linux box. Backups nightly. Your workspace, your data, your domain.',
               ],
               [
-                'When can I take real payouts?',
-                'CSV export today. Stripe Connect lands in Slice 6 (~3 weeks). Roadmap is in the repo.',
+                'How do I take payouts?',
+                'Download the payouts CSV from /app/payouts. Or drop a STRIPE_SECRET_KEY into .env and credit packs + automated transfers come online.',
               ],
               [
-                'Will you ever charge?',
-                'Yes — AI features will be credit-priced when they land. Link tracking stays free up to fair usage.',
+                'What does it cost?',
+                'Free during early access. AI features burn credits (~$0.05 each, via Stripe). Link tracking + dashboards stay free.',
               ],
             ].map(([q, a], i) => (
               <Reveal key={i} delay={i * 0.04}>
@@ -560,7 +566,7 @@ export function Landing({ stats, today }: { stats: Stats; today: string }) {
           </div>
           <div className="flex flex-col justify-between gap-3 border-t border-dotted border-[var(--rule)] pt-6 text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--berry-2)] sm:flex-row">
             <span>{today} · London · doc 0001</span>
-            <span>Built this week. Live now. Free during build-out.</span>
+            <span>v1.0 · all six slices live · free during early access.</span>
           </div>
         </div>
       </footer>

@@ -18,9 +18,9 @@ const body = Cabin({
 });
 
 export const metadata = {
-  title: 'Partner — a half-built referral platform.',
+  title: 'Partner — the open referral stack.',
   description:
-    'Short-link tracking and dashboards work right now. Campaigns, payouts and AI captions land in four weeks. Free until then.',
+    'Short-link tracking, campaigns, AI captions, conversion attribution, and Stripe payouts. The full stack runs at partner.711web.com today. Open source. Free during early access.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
