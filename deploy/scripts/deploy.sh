@@ -17,8 +17,8 @@ git reset --hard origin/main
 echo ">> install deps"
 pnpm install --frozen-lockfile
 
-echo ">> run migrations"
-pnpm db:push
+echo ">> apply committed migrations (no regeneration in prod)"
+pnpm exec tsx scripts/db-migrate.ts
 
 echo ">> build"
 pnpm build
