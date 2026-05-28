@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getSession } from '@/lib/auth/session';
 import { getWorkspaceForUser } from '@/lib/workspaces/queries';
-import { generateBrandCredentialsAction } from './actions';
+import { generateBrandCredentialsAction, updateTagsAction } from './actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,6 +34,27 @@ export default async function SettingsPage({
           kind: <span className="font-medium text-[var(--fg)]">{ws.kind}</span>
         </p>
       </header>
+
+      <section className="rounded-lg border border-[var(--border)] bg-white p-6">
+        <h2 className="text-lg font-semibold">Tags</h2>
+        <p className="mt-1 text-sm text-[var(--muted)]">
+          Used to match you to campaigns in the marketplace.
+        </p>
+        <form action={updateTagsAction} className="mt-4 flex flex-col gap-3 sm:flex-row">
+          <input
+            name="tags"
+            defaultValue={ws.tags}
+            placeholder="beauty, fashion, summer"
+            className="flex-1 rounded-md border border-[var(--border)] px-3 py-2 text-sm"
+          />
+          <button
+            type="submit"
+            className="cursor-pointer rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white"
+          >
+            Save tags
+          </button>
+        </form>
+      </section>
 
       <section className="rounded-lg border border-[var(--border)] bg-white p-6">
         <h2 className="text-lg font-semibold">Brand credentials</h2>

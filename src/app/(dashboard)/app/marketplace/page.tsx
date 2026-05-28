@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getSession } from '@/lib/auth/session';
 import { getWorkspaceForUser } from '@/lib/workspaces/queries';
 import { listLiveCampaigns, listJoinedCampaignsForCreator } from '@/lib/campaigns/queries';
+import { rankCampaignsForCreator } from '@/lib/matching/tags';
 import { joinCampaignAction } from '../campaigns/actions';
 
 export const dynamic = 'force-dynamic';
@@ -13,10 +14,11 @@ export default async function MarketplacePage() {
   const ws = await getWorkspaceForUser(session.user.id);
   if (!ws) redirect('/login');
 
-  const [live, joined] = await Promise.all([
+  const [liveRaw, joined] = await Promise.all([
     listLiveCampaigns(),
     listJoinedCampaignsForCreator(ws.id),
   ]);
+  const live = rankCampaignsForCreator(ws.tags, liveRaw);
   const joinedIds = new Set(joined.map((j) => j.campaign.id));
 
   return (
@@ -48,9 +50,16 @@ export default async function MarketplacePage() {
                     </div>
                     <div className="text-lg font-medium">{c.name}</div>
                   </div>
-                  <span className="rounded-md border border-[var(--accent)] px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--accent)]">
-                    {(c.commissionBps / 100).toFixed(1)}%
-                  </span>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className="rounded-md border border-[var(--accent)] px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--accent)]">
+                      {(c.commissionBps / 100).toFixed(1)}%
+                    </span>
+                    {c.score > 0 && (
+                      <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-mono text-emerald-700">
+                        match {Math.round(c.score * 100)}%
+                      </span>
+                    )}
+                  </div>
                 </div>
                 {c.brief && (
                   <p className="text-sm leading-snug text-[var(--muted)]">{c.brief}</p>

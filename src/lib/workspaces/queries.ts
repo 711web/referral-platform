@@ -23,3 +23,20 @@ export async function setBrandCredentials(
     .returning();
   return row ?? null;
 }
+
+export async function setWorkspaceTags(
+  workspaceId: string,
+  tags: string,
+): Promise<Workspace | null> {
+  const cleaned = tags
+    .split(',')
+    .map((t) => t.trim().toLowerCase())
+    .filter(Boolean)
+    .join(', ');
+  const [row] = await db
+    .update(workspaces)
+    .set({ tags: cleaned })
+    .where(eq(workspaces.id, workspaceId))
+    .returning();
+  return row ?? null;
+}
