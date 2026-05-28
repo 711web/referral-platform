@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, index, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid, index, uniqueIndex, integer } from 'drizzle-orm/pg-core';
 import { users } from './auth';
 
 export const workspaces = pgTable(
@@ -13,7 +13,7 @@ export const workspaces = pgTable(
     brandKey: text('brand_key'),
     brandSecret: text('brand_secret'),
     // AI credits (Slice 5). Pre-paid, decremented per AI call.
-    aiCredits: text('ai_credits').notNull().default('0'),
+    aiCredits: integer('ai_credits').notNull().default(0),
     // Brand tags (Slice 4) for matching. Comma-separated for simplicity.
     tags: text('tags').notNull().default(''),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

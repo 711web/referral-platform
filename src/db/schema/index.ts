@@ -4,3 +4,4 @@ export * from './links';
 export * from './clicks';
 export * from './conversions';
 export * from './campaigns';
+export * from './credits';
