@@ -88,14 +88,20 @@ else
   fi
 fi
 
-# 4. Write .env
+# 4. Write .env (preserve AUTH_SECRET across re-runs)
 echo ">> writing $ENV_FILE"
+EXISTING_AUTH_SECRET=$(grep -E '^AUTH_SECRET=' "$ENV_FILE" 2>/dev/null | cut -d= -f2- || true)
+if [ -z "$EXISTING_AUTH_SECRET" ]; then
+  EXISTING_AUTH_SECRET=$(openssl rand -base64 32)
+fi
 cat > "$ENV_FILE" <<EOF
 DATABASE_URL=postgres://referral:${EFFECTIVE_PW}@localhost:5432/referral
 REDIS_URL=redis://localhost:6379
 SHORT_DOMAIN=partner.711web.com
 NODE_ENV=production
 PORT=${APP_PORT}
+AUTH_SECRET=${EXISTING_AUTH_SECRET}
+BETTER_AUTH_URL=https://partner.711web.com
 EOF
 chmod 600 "$ENV_FILE"
 

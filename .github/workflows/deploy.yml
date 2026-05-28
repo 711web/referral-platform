@@ -39,6 +39,8 @@ jobs:
       REDIS_URL: redis://localhost:6379
       SHORT_DOMAIN: partner.711web.com
       NODE_ENV: test
+      AUTH_SECRET: ci-only-not-secret-32-chars-abcdefghij
+      BETTER_AUTH_URL: http://localhost:3000
 
     steps:
       - uses: actions/checkout@v6
