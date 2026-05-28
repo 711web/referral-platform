@@ -1,40 +1,32 @@
 import type { ReactNode } from 'react';
-import { Instrument_Serif, Geist, Geist_Mono } from 'next/font/google';
+import { Amatic_SC, Cabin } from 'next/font/google';
 import './globals.css';
 
-const display = Instrument_Serif({
+const display = Amatic_SC({
   subsets: ['latin'],
-  weight: '400',
-  style: ['normal', 'italic'],
+  weight: ['400', '700'],
   variable: '--font-display',
   display: 'swap',
 });
 
-const sans = Geist({
+const body = Cabin({
   subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-});
-
-const mono = Geist_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-body',
   display: 'swap',
 });
 
 export const metadata = {
-  title: 'Partner — Every share, accounted for.',
+  title: 'Partner — a half-built referral platform.',
   description:
-    'Short links with proper attribution. Campaigns brands can run. Payouts creators can trust. A receipts-first referral platform.',
+    'Short-link tracking and dashboards work right now. Campaigns, payouts and AI captions land in four weeks. Free until then.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
-    >
-      <body className="min-h-screen antialiased">{children}</body>
+    <html lang="en" className={`${display.variable} ${body.variable}`}>
+      <body className="min-h-screen overflow-x-clip">{children}</body>
     </html>
   );
 }
