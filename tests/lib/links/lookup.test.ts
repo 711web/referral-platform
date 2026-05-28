@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { eq } from 'drizzle-orm';
 import { db, pool } from '@/db/client';
-import { links } from '@/db/schema';
+import { links, workspaces } from '@/db/schema';
 import { redis } from '@/lib/redis';
 import { lookupLinkBySlug } from '@/lib/links/lookup';
 
@@ -8,9 +9,16 @@ describe('lookupLinkBySlug', () => {
   beforeAll(async () => {
     await db.delete(links);
     await redis.flushdb();
+    const [systemWs] = await db
+      .select()
+      .from(workspaces)
+      .where(eq(workspaces.ownerUserId, 'system'))
+      .limit(1);
+    if (!systemWs) throw new Error('system workspace missing — run backfill');
     await db.insert(links).values({
       slug: 'hello',
       destinationUrl: 'https://example.com/landing',
+      workspaceId: systemWs.id,
     });
   });
 

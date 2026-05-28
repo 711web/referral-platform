@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { db, pool } from '@/db/client';
-import { clicks, links } from '@/db/schema';
+import { clicks, links, workspaces } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { enqueueClick, flushClicks, _resetQueue } from '@/lib/clicks/queue';
 
@@ -10,9 +10,19 @@ describe('clicks queue', () => {
   beforeAll(async () => {
     await db.delete(clicks);
     await db.delete(links);
+    const [systemWs] = await db
+      .select()
+      .from(workspaces)
+      .where(eq(workspaces.ownerUserId, 'system'))
+      .limit(1);
+    if (!systemWs) throw new Error('system workspace missing — run backfill');
     const [row] = await db
       .insert(links)
-      .values({ slug: 'qtest', destinationUrl: 'https://example.com' })
+      .values({
+        slug: 'qtest',
+        destinationUrl: 'https://example.com',
+        workspaceId: systemWs.id,
+      })
       .returning();
     linkId = row!.id;
   });
