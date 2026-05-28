@@ -18,9 +18,11 @@ async function main() {
     SELECT 'system', 'System', 'system'
     WHERE NOT EXISTS (SELECT 1 FROM workspaces WHERE owner_user_id = 'system')
   `);
-  const [{ id: systemWsId }] = (await db.execute(
+  const rows = (await db.execute(
     sql`SELECT id FROM workspaces WHERE owner_user_id = 'system' LIMIT 1`,
   )).rows as Array<{ id: string }>;
+  const systemWsId = rows[0]?.id;
+  if (!systemWsId) throw new Error('system workspace not found after insert');
 
   const seed = [
     { slug: 'demo', destinationUrl: 'https://example.com/page' },
