@@ -20,6 +20,24 @@ export default async function DashboardLayout({ children }: { children: ReactNod
           <Link href="/app" className="rounded-md px-2 py-1 hover:bg-slate-100">
             Links
           </Link>
+          <Link href="/app/conversions" className="rounded-md px-2 py-1 hover:bg-slate-100">
+            Conversions
+          </Link>
+          <Link href="/app/campaigns" className="rounded-md px-2 py-1 hover:bg-slate-100">
+            Campaigns
+          </Link>
+          <Link href="/app/marketplace" className="rounded-md px-2 py-1 hover:bg-slate-100">
+            Marketplace
+          </Link>
+          <Link href="/app/credits" className="rounded-md px-2 py-1 hover:bg-slate-100">
+            Credits
+          </Link>
+          <Link href="/app/payouts" className="rounded-md px-2 py-1 hover:bg-slate-100">
+            Payouts
+          </Link>
+          <Link href="/app/settings" className="rounded-md px-2 py-1 hover:bg-slate-100">
+            Settings
+          </Link>
         </nav>
         <form action={logoutAction} className="mt-6">
           <button className="text-sm text-[var(--muted)] hover:text-[var(--fg)]">
